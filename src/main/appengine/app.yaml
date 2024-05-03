@@ -1,0 +1,8 @@
+runtime: java17
+service: bigquery
+entrypoint: java -jar bigquery-all.jar
+handlers:
+  - url: /.*
+    secure: always
+    redirect_http_response_code: 301
+    script: auto
