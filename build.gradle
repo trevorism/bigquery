@@ -60,6 +60,10 @@ dependencies {
 
     runtimeOnly("ch.qos.logback:logback-classic")
     acceptanceImplementation 'io.cucumber:cucumber-groovy:6.10.4'
+
+    implementation 'com.trevorism:micronaut-security-utils:1.1.0'
+    implementation 'com.google.code.gson:gson:2.11.0'
+    implementation 'com.google.cloud:google-cloud-bigquery:2.40.1'
 }
 
 application {

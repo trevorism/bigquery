@@ -57,6 +57,6 @@ class RootController {
     )
     @Get(value = "/version", produces = MediaType.TEXT_PLAIN)
     String version() {
-        return "0-0-1"
+        return "0-1-0"
     }
 }
