@@ -58,7 +58,6 @@ class ObjectController {
     @Operation(summary = "Create an object of type {kind} **Secure")
     @Status(HttpStatus.CREATED)
     @Post(value = "{kind}", produces = MediaType.APPLICATION_JSON, consumes = MediaType.APPLICATION_JSON)
-    @Secure(value = Roles.USER, allowInternal = true)
     Map<String, Object> create(String kind, @Body Map<String, Object> data) {
         try {
             def entity = repository.create(kind, data)
