@@ -29,7 +29,7 @@ class ObjectController {
     @Tag(name = "Object Operations")
     @Operation(summary = "Get all types")
     @Get(value = "/", produces = MediaType.APPLICATION_JSON)
-    List<String> getKinds() {
+    List<String> listTables() {
         return repository.listTables()
     }
 
