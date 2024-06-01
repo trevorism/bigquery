@@ -17,7 +17,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.google.cloud.tools:appengine-gradle-plugin:2.8.0'
-        classpath 'com.trevorism:gradle-acceptance-plugin:2.3.1'
+        classpath 'com.trevorism:gradle-acceptance-plugin:2.7.2'
     }
 }
 
@@ -27,7 +27,6 @@ plugins {
     id("io.micronaut.application") version "4.3.8"
     id("jacoco")
 }
-
 
 apply plugin: 'com.google.cloud.tools.appengine'
 apply plugin: "com.trevorism.gradle.acceptance"
@@ -59,11 +58,16 @@ dependencies {
     }
 
     runtimeOnly("ch.qos.logback:logback-classic")
-    acceptanceImplementation 'io.cucumber:cucumber-groovy:6.10.4'
 
     implementation 'com.trevorism:micronaut-security-utils:1.1.0'
     implementation 'com.google.code.gson:gson:2.11.0'
     implementation 'com.google.cloud:google-cloud-bigquery:2.40.1'
+
+
+    testImplementation 'com.trevorism:test-result-events:0.3.0'
+    acceptanceImplementation 'io.cucumber:cucumber-groovy:6.10.4'
+    acceptanceImplementation 'com.trevorism:secure-http-utils:3.1.0'
+    acceptanceImplementation 'com.google.code.gson:gson:2.11.0'
 }
 
 application {
@@ -89,6 +93,24 @@ appengine {
     stage.artifact = layout.buildDirectory.file("libs/${project.name}-all.jar")
     deploy {
         projectId = "trevorism-data"
-        version = "0-1-0"
+        version = "0-3-0"
+        stopPreviousVersion = true
+        promote = true
     }
 }
+
+test {
+    systemProperty("trevorism.test.event", findProperty("trevorism.test.event") == "enabled" ? project.name : null)
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.1
+            }
+        }
+    }
+}
+
+build.dependsOn jacocoTestCoverageVerification

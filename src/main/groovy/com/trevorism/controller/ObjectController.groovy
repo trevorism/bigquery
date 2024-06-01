@@ -68,4 +68,16 @@ class ObjectController {
         }
     }
 
+    @Tag(name = "Object Operations")
+    @Operation(summary = "Delete an object of type {kind} with id {id} **Secure")
+    @Delete(value = "{kind}/{id}", produces = MediaType.APPLICATION_JSON)
+    @Secure(value = Roles.USER, allowInternal = true)
+    Map<String, Object> delete(String kind, String id) {
+        def entity = repository.delete(kind, id)
+        if (!entity)
+            throw new HttpStatusException(HttpStatus.NOT_FOUND, "${id} not found")
+
+        return entity
+    }
+
 }

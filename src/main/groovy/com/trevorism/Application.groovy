@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory
 @OpenAPIDefinition(
         info = @Info(
                 title = "Bigquery",
-                version = "0.2.0",
+                version = "0.3.0",
                 description = "Bigquery API which uses the Trevorism Data API standard",
                 contact = @Contact(url = "https://trevorism.com", name = "Trevor Brooks", email = "tbrooks@trevorism.com")
         )

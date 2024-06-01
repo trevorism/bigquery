@@ -5,11 +5,11 @@ import com.google.cloud.bigquery.*
 @jakarta.inject.Singleton
 class BigQueryRepository implements DataRepository {
 
-    static final String DATASET_NAME = "trevorism"
-    static final String GCP_DEFAULT_PROJECT = "trevorism-data"
-    static final String ID_FIELD = "id"
+    private static final String DATASET_NAME = "trevorism"
+    private static final String GCP_DEFAULT_PROJECT = "trevorism-data"
+    private static final String ID_FIELD = "id"
 
-    BigQuery bigquery = BigQueryOptions.getDefaultInstance().getService()
+    private BigQuery bigquery = BigQueryOptions.getDefaultInstance().getService()
 
     @Override
     List<String> listTables() {
@@ -40,10 +40,22 @@ class BigQueryRepository implements DataRepository {
 
     @Override
     Map<String, Object> read(String kind, String id) {
-        String query = "SELECT * FROM `${GCP_DEFAULT_PROJECT}.${DATASET_NAME}.${kind}` WHERE id = \"${id}\""
+        String query = "SELECT * FROM `${DATASET_NAME}.${kind}` WHERE id = \"${id}\""
         QueryJobConfiguration queryConfig = QueryJobConfiguration.newBuilder(query).build()
         TableResult result = bigquery.query(queryConfig)
         return objectFromQueryResult(result)
+    }
+
+    @Override
+    Map<String, Object> delete(String kind, String id) {
+        def result = read(kind, id)
+        if (result.isEmpty()) {
+            return [:]
+        }
+        String query = "DELETE FROM `${DATASET_NAME}.${kind}` WHERE id = \"${id}\""
+        QueryJobConfiguration queryConfig = QueryJobConfiguration.newBuilder(query).build()
+        bigquery.query(queryConfig)
+        return result
     }
 
     private static Map<String, Object> objectFromQueryResult(TableResult result) {
@@ -59,7 +71,7 @@ class BigQueryRepository implements DataRepository {
 
     @Override
     List<Map<String, Object>> readAll(String kind) {
-        String query = "SELECT * FROM `${GCP_DEFAULT_PROJECT}.${DATASET_NAME}.${kind}`"
+        String query = "SELECT * FROM `${DATASET_NAME}.${kind}`"
         QueryJobConfiguration queryConfig = QueryJobConfiguration.newBuilder(query).build()
         TableResult result = bigquery.query(queryConfig)
 

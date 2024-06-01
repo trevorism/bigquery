@@ -8,6 +8,6 @@ class InMemoryDescribeService implements DescribeService {
 
     @Override
     List<String> describe(Describe request) {
-        ["list","create","read"]
+        ["list","create","read","delete"]
     }
 }
