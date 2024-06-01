@@ -63,7 +63,6 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.11.0'
     implementation 'com.google.cloud:google-cloud-bigquery:2.40.1'
 
-
     testImplementation 'com.trevorism:test-result-events:0.3.0'
     acceptanceImplementation 'io.cucumber:cucumber-groovy:6.10.4'
     acceptanceImplementation 'com.trevorism:secure-http-utils:3.1.0'
