@@ -6,7 +6,5 @@
 
 Wraps Google BigQuery conforming to the Trevorism Data API standard.
 
-Current version: 0.3.0
-
 # How to build
 `gradle clean build`

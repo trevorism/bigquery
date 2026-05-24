@@ -1,4 +1,4 @@
-runtime: java17
+runtime: java25
 service: bigquery
 entrypoint: java -jar bigquery-all.jar
 handlers:

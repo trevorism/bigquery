@@ -1,3 +1,7 @@
+# 0.4.0
+
+Upgrade to micronaut 5, java 25. Update dependencies.
+
 # 0.3.0
 
 Add delete. Update with test and deploy events. Add acceptance tests.
