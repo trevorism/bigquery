@@ -29,6 +29,8 @@ class BigQueryRepository implements DataRepository {
             data.put(ID_FIELD, uuid)
         }
 
+        ensureTableExists(kind, data)
+
         TableId tableId = TableId.of(DATASET_NAME, kind)
         InsertAllResponse response = bigquery.insertAll(InsertAllRequest.newBuilder(tableId).addRow(data).build())
 
@@ -36,6 +38,31 @@ class BigQueryRepository implements DataRepository {
             throw new RuntimeException("Failed to insert data: " + response.getInsertErrors())
         }
         return data
+    }
+
+    void ensureTableExists(String kind, Map<String, Object> data) {
+        TableId tableId = TableId.of(DATASET_NAME, kind)
+        Table table = bigquery.getTable(tableId)
+        if (table == null) {
+            Schema schema = inferSchema(data)
+            TableDefinition tableDefinition = StandardTableDefinition.of(schema)
+            TableInfo tableInfo = TableInfo.newBuilder(tableId, tableDefinition).build()
+            bigquery.create(tableInfo)
+        }
+    }
+
+    static Schema inferSchema(Map<String, Object> data) {
+        List<Field> fields = data.collect { String key, Object value ->
+            Field.of(key, inferSqlType(value))
+        }
+        return Schema.of(fields)
+    }
+
+    static StandardSQLTypeName inferSqlType(Object value) {
+        if (value instanceof Boolean) return StandardSQLTypeName.BOOL
+        if (value instanceof Integer || value instanceof Long) return StandardSQLTypeName.INT64
+        if (value instanceof Double || value instanceof Float) return StandardSQLTypeName.FLOAT64
+        return StandardSQLTypeName.STRING
     }
 
     @Override
