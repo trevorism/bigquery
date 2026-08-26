@@ -1,5 +1,6 @@
 package com.trevorism.controller
 
+import com.trevorism.secure.Permissions
 import com.trevorism.secure.Roles
 import com.trevorism.secure.Secure
 import com.trevorism.service.DataRepository
@@ -29,6 +30,7 @@ class ObjectController {
     @Tag(name = "Object Operations")
     @Operation(summary = "Get all types")
     @Get(value = "/", produces = MediaType.APPLICATION_JSON)
+    @Secure(value = Roles.USER, allowInternal = true, permissions = Permissions.READ)
     List<String> listTables() {
         return repository.listTables()
     }
@@ -36,7 +38,7 @@ class ObjectController {
     @Tag(name = "Object Operations")
     @Operation(summary = "Get an object of type {kind} with id {id} **Secure")
     @Get(value = "{kind}/{id}", produces = MediaType.APPLICATION_JSON)
-    @Secure(value = Roles.USER, allowInternal = true)
+    @Secure(value = Roles.USER, allowInternal = true, permissions = Permissions.READ)
     Map<String, Object> read(String kind, String id) {
         def entity = repository.read(kind, id)
         if (!entity)
@@ -48,7 +50,7 @@ class ObjectController {
     @Tag(name = "Object Operations")
     @Operation(summary = "Get all objects of type {kind} **Secure")
     @Get(value = "{kind}", produces = MediaType.APPLICATION_JSON)
-    @Secure(value = Roles.USER, allowInternal = true)
+    @Secure(value = Roles.USER, allowInternal = true, permissions = Permissions.READ)
     List<Map<String, Object>> readAll(String kind) {
         def entities = repository.readAll(kind)
         return entities
@@ -58,6 +60,7 @@ class ObjectController {
     @Operation(summary = "Create an object of type {kind} **Secure")
     @Status(HttpStatus.CREATED)
     @Post(value = "{kind}", produces = MediaType.APPLICATION_JSON, consumes = MediaType.APPLICATION_JSON)
+    @Secure(value = Roles.USER, allowInternal = true, permissions = Permissions.CREATE)
     Map<String, Object> create(String kind, @Body Map<String, Object> data) {
         try {
             def entity = repository.create(kind, data)
@@ -71,7 +74,7 @@ class ObjectController {
     @Tag(name = "Object Operations")
     @Operation(summary = "Delete an object of type {kind} with id {id} **Secure")
     @Delete(value = "{kind}/{id}", produces = MediaType.APPLICATION_JSON)
-    @Secure(value = Roles.USER, allowInternal = true)
+    @Secure(value = Roles.USER, allowInternal = true, permissions = Permissions.DELETE)
     Map<String, Object> delete(String kind, String id) {
         def entity = repository.delete(kind, id)
         if (!entity)
